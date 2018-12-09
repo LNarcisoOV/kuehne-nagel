@@ -14,7 +14,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
         	.antMatchers("/kuehne-nagel")
         	.permitAll()
+        	.antMatchers("/kuehne-nagel/sendMessage")
+        	.permitAll()
         	.antMatchers("/loginTest")
         	.authenticated();
+        
+            http.csrf().disable();
     }
 }
