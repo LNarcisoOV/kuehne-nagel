@@ -31,11 +31,24 @@ public class MessageController {
 	}
 
 	@ResponseBody
-	@PostMapping(value="sendMessage/", produces="application/xml", consumes="application/xml")
-	public StockLevel processXml(@RequestBody StockLevel xml) {
+	@PostMapping(value="sendMessageQueue/", produces="application/xml", consumes="application/xml")
+	public StockLevel sendMessageQueue(@RequestBody StockLevel xml) {
 		try{
 			String xmlString = convertObjectInXmlString(xml);
 			jmsTemplate.convertAndSend("queue.sample", xmlString);
+		}catch(Exception e) {
+			
+		}finally {
+			return xml;
+		}
+	}
+	
+	@ResponseBody
+	@PostMapping(value="sendMessageTopic/", produces="application/xml", consumes="application/xml")
+	public StockLevel sendMessageTopic(@RequestBody StockLevel xml) {
+		try{
+			String xmlString = convertObjectInXmlString(xml);
+			jmsTemplate.convertAndSend("topic.sample", xmlString);
 		}catch(Exception e) {
 			
 		}finally {
