@@ -1,8 +1,11 @@
 package com.kuehnenagel.controller;
 
-import javax.xml.ws.Response;
+import java.io.StringWriter;
+
+import javax.xml.bind.JAXB;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.JmsException;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +20,7 @@ import com.kuehnenagel.model.StockLevel;
 @RestController
 @RequestMapping("/")
 public class MessageController {
-
+	
 	@Autowired
 	private JmsTemplate jmsTemplate;
 
@@ -30,7 +33,21 @@ public class MessageController {
 	@ResponseBody
 	@PostMapping(value="sendMessage/", produces="application/xml", consumes="application/xml")
 	public StockLevel processXml(@RequestBody StockLevel xml) {
-		return xml;
+		try{
+			String xmlString = convertObjectInXmlString(xml);
+			jmsTemplate.convertAndSend("queue.sample", xmlString);
+		}catch(Exception e) {
+			
+		}finally {
+			return xml;
+		}
+	}
+	
+	public String convertObjectInXmlString(Object obj) {
+		StringWriter sw = new StringWriter();
+		JAXB.marshal(obj, sw);
+		String xmlString = sw.toString();
+		return xmlString;
 	}
 
 }

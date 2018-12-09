@@ -7,19 +7,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class ControlSeg {
 
 	private String trnnam;
-
 	private Integer trnver;
-
 	private String uuid;
-
 	private String whId;
-
 	private String clientId;
-
 	private String iso2CtryName;
-
 	private String requestId;
-
 	private Integer routeId;
 
 	public String getTrnnam() {
