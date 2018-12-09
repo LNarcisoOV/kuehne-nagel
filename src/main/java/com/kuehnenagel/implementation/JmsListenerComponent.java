@@ -11,6 +11,9 @@ public class JmsListenerComponent implements ApplicationRunner{
 	 	@Autowired 
 	 	private JmsTemplate jmsTemplate;
 	 	
+	 	@Autowired 
+	 	private JmsTemplate jmsTemplateTopic;
+	 	
 	    @JmsListener(destination = "queue.sample")
 	    public void onReceiverQueue(String str) {
 	        System.out.println( str );
@@ -24,6 +27,6 @@ public class JmsListenerComponent implements ApplicationRunner{
 	    @Override
 	    public void run(ApplicationArguments args) throws Exception {
 	        jmsTemplate.convertAndSend("queue.sample", "{user: 'testQueue', using: 'queue'}");
-	        jmsTemplate.convertAndSend("topic.sample", "{user: 'testTopic', using: 'topic'}");
+	        jmsTemplateTopic.convertAndSend("topic.sample", "{user: 'testTopic', using: 'topic'}");
 	    }
 }
