@@ -78,7 +78,7 @@ public class JmsListenerComponent implements ApplicationRunner{
 
 	    @Override
 	    public void run(ApplicationArguments args) throws Exception {
-	        jmsTemplate.convertAndSend("queue.sample", xmlExample);
+	    	jmsDispatcherInterface.publishXMLOnSpecificQueue("queue.sample", xmlExample);
 //	        jmsTemplateTopic.convertAndSend("topic.sample", xmlExample);
 	    }
 }

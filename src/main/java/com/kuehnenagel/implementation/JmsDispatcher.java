@@ -24,6 +24,15 @@ public class JmsDispatcher implements ApplicationRunner, JmsDispatcherInterface{
 		String xml = UtilConverter.convertObjectInXmlString(stockLevel);
 		sendMessage(endPoint, xml);
     }
+	
+	public void publishOnSpecificQueue(String endPoint, StockLevel stockLevel) throws Exception {
+		String xml = UtilConverter.convertObjectInXmlString(stockLevel);
+		sendMessage(endPoint, xml);
+    }
+	
+	public void publishXMLOnSpecificQueue(String endPoint, String xml) throws Exception {
+		sendMessage(endPoint, xml);
+    }
 
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
