@@ -1,8 +1,8 @@
 package com.kuehnenagel.Util;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
 
 import java.io.StringReader;
 
@@ -10,7 +10,9 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.kuehnenagel.model.StockLevel;
@@ -48,6 +50,9 @@ public class UtilConverterTest {
 			+ "<REQUEST_ID>bc2a55e8-5a07-4af6-85fd-8290d3ccfb51</REQUEST_ID>\r\n" + "<ROUTE_ID>186</ROUTE_ID>\r\n"
 			+ "</CTRL_SEG>\r\n" + "</UC_STOCK_LEVEL_IFD>";
 
+	@Rule
+    public ExpectedException thrown = ExpectedException.none();
+	
 	@Test
 	public void verifyConversionOfXmlIntoObjectIsNotNull() {
 		StockLevel stockLevel = convertXmlIntoStockLevel(validXmlExample);
@@ -85,9 +90,16 @@ public class UtilConverterTest {
 		assertTrue(stockLevel.getControlSeg().getRouteId() == null);
 	}
 	
-	@Test(expected = Exception.class)
+	@Test
 	public void shallThrowsExceptionAfterSendAnInvalidXml() {
-		when(convertXmlIntoStockLevel(invalidXmlExample)).thenThrow(new Exception());
+		try {
+			convertXmlIntoStockLevel(invalidXmlExample);
+		}catch(Exception e) {
+			 assertThat(e)
+			 .isInstanceOf(AssertionError.class)
+			 .hasMessage("A marcação no documento após o elemento-raiz deve estar correta.");
+			 //Translating: The markup in document after root-element shall be correct.
+		}
 	}
 	
 	private StockLevel convertXmlIntoStockLevel(String xml) {
