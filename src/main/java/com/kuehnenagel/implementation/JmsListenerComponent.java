@@ -13,6 +13,7 @@ import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
 
+import com.kuehnenagel.interfaces.JmsDispatcherInterface;
 import com.kuehnenagel.model.StockLevel;
 
 @Component
@@ -37,6 +38,9 @@ public class JmsListenerComponent implements ApplicationRunner{
 	 	@Autowired 
 	 	private JmsTemplate jmsTemplateTopic;
 	 	
+	 	@Autowired 
+	 	private JmsDispatcherInterface jmsDispatcherInterface;
+	 	
 	    @JmsListener(destination = "queue.sample")
 	    public void onReceiverQueue(String str) {
 	    	JAXBContext jaxbContext;
@@ -44,14 +48,22 @@ public class JmsListenerComponent implements ApplicationRunner{
 	    	    jaxbContext = JAXBContext.newInstance(StockLevel.class);             
 	    	    Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 	    	    StockLevel stockLevel = (StockLevel) jaxbUnmarshaller.unmarshal(new StringReader(str));
-	    	     
-	    	    System.out.println(stockLevel);
+	    	    publishOnSpecificTopic("topic.sample", stockLevel); 
 	    	} 	catch (JAXBException e){
 	    	    e.printStackTrace();
 	    	}
 	    }
 	    
-	    @JmsListener(destination = "topic.sample", containerFactory = "jmsFactoryTopic")
+	    private void publishOnSpecificTopic(String endPoint, StockLevel stockLevel) {
+	    	try {
+				jmsDispatcherInterface.publishOnSpecificTopic(endPoint, stockLevel);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		@JmsListener(destination = "topic.sample", containerFactory = "jmsFactoryTopic")
 	    public void onReceiverTopic(String str) {
 	    	JAXBContext jaxbContext;
 	    	try{
@@ -59,7 +71,6 @@ public class JmsListenerComponent implements ApplicationRunner{
 	    	    Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 	    	    StockLevel stockLevel = (StockLevel) jaxbUnmarshaller.unmarshal(new StringReader(str));
 	    	     
-	    	    System.out.println(stockLevel);
 	    	} 	catch (JAXBException e){
 	    	    e.printStackTrace();
 	    	}
@@ -68,6 +79,6 @@ public class JmsListenerComponent implements ApplicationRunner{
 	    @Override
 	    public void run(ApplicationArguments args) throws Exception {
 	        jmsTemplate.convertAndSend("queue.sample", xmlExample);
-	        jmsTemplateTopic.convertAndSend("topic.sample", xmlExample);
+//	        jmsTemplateTopic.convertAndSend("topic.sample", xmlExample);
 	    }
 }

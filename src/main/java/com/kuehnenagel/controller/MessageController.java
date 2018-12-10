@@ -1,11 +1,6 @@
 package com.kuehnenagel.controller;
 
-import java.io.StringWriter;
-
-import javax.xml.bind.JAXB;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.kuehnenagel.interfaces.JmsDispatcherInterface;
 import com.kuehnenagel.model.StockLevel;
+import com.kuehnenagel.util.UtilConverter;
 
 @RestController
 @RequestMapping("/")
@@ -34,7 +30,7 @@ public class MessageController {
 	@PostMapping(value="sendMessageQueue/", produces="application/xml", consumes="application/xml")
 	public StockLevel sendMessageQueue(@RequestBody StockLevel stockLevel) {
 		try{
-			String xmlString = convertObjectInXmlString(stockLevel);
+			String xmlString = UtilConverter.convertObjectInXmlString(stockLevel);
 			jmsDispatcherInterface.sendMessage("queue.sample", xmlString);
 		}catch(Exception e) {
 			
@@ -47,7 +43,7 @@ public class MessageController {
 	@PostMapping(value="sendMessageTopic/", produces="application/xml", consumes="application/xml")
 	public StockLevel sendMessageTopic(@RequestBody StockLevel stockLevel) {
 		try{
-			String xmlString = convertObjectInXmlString(stockLevel);
+			String xmlString = UtilConverter.convertObjectInXmlString(stockLevel);
 			jmsDispatcherInterface.sendMessage("topic.sample", xmlString);
 		}catch(Exception e) {
 			
@@ -55,12 +51,4 @@ public class MessageController {
 			return stockLevel;
 		}
 	}
-	
-	public String convertObjectInXmlString(Object obj) {
-		StringWriter sw = new StringWriter();
-		JAXB.marshal(obj, sw);
-		String xmlString = sw.toString();
-		return xmlString;
-	}
-
 }

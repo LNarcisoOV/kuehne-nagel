@@ -7,6 +7,8 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 
 import com.kuehnenagel.interfaces.JmsDispatcherInterface;
+import com.kuehnenagel.model.StockLevel;
+import com.kuehnenagel.util.UtilConverter;
 
 @Service
 public class JmsDispatcher implements ApplicationRunner, JmsDispatcherInterface{
@@ -16,6 +18,11 @@ public class JmsDispatcher implements ApplicationRunner, JmsDispatcherInterface{
  	
 	public void sendMessage(String endPoint, String xml) throws Exception {
         jmsTemplate.convertAndSend(endPoint, xml);
+    }
+	
+	public void publishOnSpecificTopic(String endPoint, StockLevel stockLevel) throws Exception {
+		String xml = UtilConverter.convertObjectInXmlString(stockLevel);
+		sendMessage(endPoint, xml);
     }
 
 	@Override
