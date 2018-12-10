@@ -33,12 +33,6 @@ public class JmsListenerComponent implements ApplicationRunner{
 				"</UC_STOCK_LEVEL_IFD>";
 
 	 	@Autowired 
-	 	private JmsTemplate jmsTemplate;
-	 	
-	 	@Autowired 
-	 	private JmsTemplate jmsTemplateTopic;
-	 	
-	 	@Autowired 
 	 	private JmsDispatcherInterface jmsDispatcherInterface;
 	 	
 	    @JmsListener(destination = "queue.sample")
@@ -60,21 +54,23 @@ public class JmsListenerComponent implements ApplicationRunner{
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
+			}   	
 		}
 
-		@JmsListener(destination = "topic.sample", containerFactory = "jmsFactoryTopic")
-	    public void onReceiverTopic(String str) {
-	    	JAXBContext jaxbContext;
-	    	try{
-	    	    jaxbContext = JAXBContext.newInstance(StockLevel.class);             
-	    	    Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-	    	    StockLevel stockLevel = (StockLevel) jaxbUnmarshaller.unmarshal(new StringReader(str));
-	    	     
-	    	} 	catch (JAXBException e){
-	    	    e.printStackTrace();
-	    	}
-	    }
+	    
+//		UNCOMMENT IF YOU WANT TO CONSUME THIS TOPIC	    
+//		@JmsListener(destination = "topic.sample")
+//	    public void onReceiverTopic(String str) {
+//	    	JAXBContext jaxbContext;
+//	    	try{
+//	    	    jaxbContext = JAXBContext.newInstance(StockLevel.class);             
+//	    	    Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+//	    	    StockLevel stockLevel = (StockLevel) jaxbUnmarshaller.unmarshal(new StringReader(str));
+//	    	    stockLevel.toString(); 
+//	    	} 	catch (JAXBException e){
+//	    	    e.printStackTrace();
+//	    	}
+//	    }
 
 	    @Override
 	    public void run(ApplicationArguments args) throws Exception {
