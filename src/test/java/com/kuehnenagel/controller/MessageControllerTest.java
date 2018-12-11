@@ -1,6 +1,7 @@
 package com.kuehnenagel.controller;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -80,7 +81,30 @@ public class MessageControllerTest {
 
 		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 		MockHttpServletResponse response = result.getResponse();
-		assertEquals(HttpStatus.ACCEPTED.value(), response.getStatus());
+		assertTrue(response.getContentAsString().contains("CLIE01"));
+	}
+	
+	@Test
+	public void testSendMessageQueueWithInvalidXml() throws Exception {
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/sendMessageQueue/")
+										.accept(MediaType.APPLICATION_XML)
+										.contentType(MediaType.APPLICATION_XML)
+										.content(invalidXmlExample);
 
+		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+		MockHttpServletResponse response = result.getResponse();
+		assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+	}
+	
+	@Test
+	public void testSendMessageQueueWithEmptyXml() throws Exception {
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/sendMessageQueue/")
+										.accept(MediaType.APPLICATION_XML)
+										.contentType(MediaType.APPLICATION_XML)
+										.content(emptyXmlExample);
+
+		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+		MockHttpServletResponse response = result.getResponse();
+		assertTrue(response.getContentAsString().contains("<CLIENT_ID></CLIENT_ID>"));
 	}
 }

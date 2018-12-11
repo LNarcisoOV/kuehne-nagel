@@ -32,33 +32,33 @@ public class MessageController {
 
 	@ResponseBody
 	@PostMapping(value="sendMessageQueue/", produces="application/xml", consumes="application/xml")
-	public ResponseEntity<StockLevel> sendMessageQueue(@RequestBody StockLevel stockLevel) throws Exception {
+	public StockLevel sendMessageQueue(@RequestBody StockLevel stockLevel) throws Exception {
 		try{
 			String xmlString = UtilConverter.convertObjectInXmlString(stockLevel);
 			jmsDispatcherInterface.sendMessage("kuehnenagel.queue.sample", xmlString);
-			return new ResponseEntity<StockLevel>(HttpStatus.ACCEPTED);
+			return stockLevel;
 		}catch(JAXBException e) {
 			e.printStackTrace();
-			return new ResponseEntity<StockLevel>(HttpStatus.NOT_ACCEPTABLE);
+			return stockLevel;
 		}catch(Exception ex) {
 			ex.printStackTrace();
-			return new ResponseEntity<StockLevel>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return stockLevel;
 		}
 	}
 	
 	@ResponseBody
 	@PostMapping(value="sendMessageTopic/", produces="application/xml", consumes="application/xml")
-	public ResponseEntity<StockLevel> sendMessageTopic(@RequestBody StockLevel stockLevel) {
+	public StockLevel sendMessageTopic(@RequestBody StockLevel stockLevel) {
 		try{
 			String xmlString = UtilConverter.convertObjectInXmlString(stockLevel);
 			jmsDispatcherInterface.sendMessage("kuehnenagel.topic.sample", xmlString);
-			return new ResponseEntity<StockLevel>(HttpStatus.ACCEPTED);
+			return stockLevel;
 		}catch(JAXBException e) {
 			e.printStackTrace();
-			return new ResponseEntity<StockLevel>(HttpStatus.NOT_ACCEPTABLE);
+			return stockLevel;
 		}catch(Exception ex) {
 			ex.printStackTrace();
-			return new ResponseEntity<StockLevel>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return stockLevel;
 		}
 	}
 }
