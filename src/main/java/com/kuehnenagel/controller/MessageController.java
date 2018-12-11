@@ -31,7 +31,7 @@ public class MessageController {
 	public StockLevel sendMessageQueue(@RequestBody StockLevel stockLevel) {
 		try{
 			String xmlString = UtilConverter.convertObjectInXmlString(stockLevel);
-			jmsDispatcherInterface.sendMessage("queue.sample", xmlString);
+			jmsDispatcherInterface.sendMessage("kuehnenagel.queue.sample", xmlString);
 		}catch(Exception e) {
 			
 		}finally {
@@ -44,7 +44,7 @@ public class MessageController {
 	public StockLevel sendMessageTopic(@RequestBody StockLevel stockLevel) {
 		try{
 			String xmlString = UtilConverter.convertObjectInXmlString(stockLevel);
-			jmsDispatcherInterface.sendMessage("topic.sample", xmlString);
+			jmsDispatcherInterface.sendMessage("kuehnenagel.topic.sample", xmlString);
 		}catch(Exception e) {
 			
 		}finally {

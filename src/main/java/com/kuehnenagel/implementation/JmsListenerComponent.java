@@ -1,10 +1,6 @@
 package com.kuehnenagel.implementation;
 
-import java.io.StringReader;
-
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -14,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import com.kuehnenagel.interfaces.JmsDispatcherInterface;
 import com.kuehnenagel.model.StockLevel;
+import com.kuehnenagel.util.UtilConverter;
 
 @Component
 public class JmsListenerComponent implements ApplicationRunner{
@@ -34,14 +31,11 @@ public class JmsListenerComponent implements ApplicationRunner{
 	 	@Autowired 
 	 	private JmsDispatcherInterface jmsDispatcherInterface;
 	 	
-	    @JmsListener(destination = "queue.sample")
-	    public void onReceiverQueue(String str) {
-	    	JAXBContext jaxbContext;
+	    @JmsListener(destination = "kuehnenagel.queue.sample")
+	    public void onReceiverQueue(String xml) {
 	    	try{
-	    	    jaxbContext = JAXBContext.newInstance(StockLevel.class);             
-	    	    Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-	    	    StockLevel stockLevel = (StockLevel) jaxbUnmarshaller.unmarshal(new StringReader(str));
-	    	    publishOnSpecificTopic("topic.sample", stockLevel); 
+	    	    StockLevel stockLevel = (StockLevel) UtilConverter.convertXmlStringIntoObjecto(xml);
+	    	    publishOnSpecificTopic("kuehnenagel.topic.sample", stockLevel); 
 	    	} 	catch (JAXBException e){
 	    	    e.printStackTrace();
 	    	}
@@ -58,13 +52,10 @@ public class JmsListenerComponent implements ApplicationRunner{
 
 	    
 //		UNCOMMENT IF YOU WANT TO CONSUME THIS TOPIC	    
-//		@JmsListener(destination = "topic.sample")
+//		@JmsListener(destination = "kuehnenagel.topic.sample")
 //	    public void onReceiverTopic(String str) {
-//	    	JAXBContext jaxbContext;
 //	    	try{
-//	    	    jaxbContext = JAXBContext.newInstance(StockLevel.class);             
-//	    	    Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-//	    	    StockLevel stockLevel = (StockLevel) jaxbUnmarshaller.unmarshal(new StringReader(str));
+//	    	    StockLevel stockLevel = (StockLevel) UtilConverter.convertXmlStringIntoObjecto(xml);
 //	    	    stockLevel.toString(); 
 //	    	} 	catch (JAXBException e){
 //	    	    e.printStackTrace();
@@ -73,7 +64,7 @@ public class JmsListenerComponent implements ApplicationRunner{
 
 	    @Override
 	    public void run(ApplicationArguments args) throws Exception {
-	    	jmsDispatcherInterface.publishXMLOnSpecificQueue("queue.sample", xmlExample);
-//	        jmsTemplateTopic.convertAndSend("topic.sample", xmlExample);
+	    	jmsDispatcherInterface.publishXMLOnSpecificQueue("kuehnenagel.queue.sample", xmlExample);
+//	        jmsTemplateTopic.convertAndSend("kuehnenagel.topic.sample", xmlExample);
 	    }
 }
