@@ -1,6 +1,10 @@
 package com.kuehnenagel.controller;
 
+import javax.xml.bind.JAXBException;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,27 +32,33 @@ public class MessageController {
 
 	@ResponseBody
 	@PostMapping(value="sendMessageQueue/", produces="application/xml", consumes="application/xml")
-	public StockLevel sendMessageQueue(@RequestBody StockLevel stockLevel) {
+	public ResponseEntity<StockLevel> sendMessageQueue(@RequestBody StockLevel stockLevel) throws Exception {
 		try{
 			String xmlString = UtilConverter.convertObjectInXmlString(stockLevel);
 			jmsDispatcherInterface.sendMessage("kuehnenagel.queue.sample", xmlString);
-		}catch(Exception e) {
-			
-		}finally {
-			return stockLevel;
+			return new ResponseEntity<StockLevel>(HttpStatus.ACCEPTED);
+		}catch(JAXBException e) {
+			e.printStackTrace();
+			return new ResponseEntity<StockLevel>(HttpStatus.NOT_ACCEPTABLE);
+		}catch(Exception ex) {
+			ex.printStackTrace();
+			return new ResponseEntity<StockLevel>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
 	@ResponseBody
 	@PostMapping(value="sendMessageTopic/", produces="application/xml", consumes="application/xml")
-	public StockLevel sendMessageTopic(@RequestBody StockLevel stockLevel) {
+	public ResponseEntity<StockLevel> sendMessageTopic(@RequestBody StockLevel stockLevel) {
 		try{
 			String xmlString = UtilConverter.convertObjectInXmlString(stockLevel);
 			jmsDispatcherInterface.sendMessage("kuehnenagel.topic.sample", xmlString);
-		}catch(Exception e) {
-			
-		}finally {
-			return stockLevel;
+			return new ResponseEntity<StockLevel>(HttpStatus.ACCEPTED);
+		}catch(JAXBException e) {
+			e.printStackTrace();
+			return new ResponseEntity<StockLevel>(HttpStatus.NOT_ACCEPTABLE);
+		}catch(Exception ex) {
+			ex.printStackTrace();
+			return new ResponseEntity<StockLevel>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 }
