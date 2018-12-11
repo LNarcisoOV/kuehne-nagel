@@ -56,7 +56,9 @@ public class UtilConverterTest {
 	@Test
 	public void verifyConversionOfXmlIntoObjectIsNotNull() {
 		StockLevel stockLevel = convertXmlIntoStockLevel(validXmlExample);
-		assertTrue(stockLevel != null);
+		assertTrue(stockLevel != null && 
+				stockLevel.getControlSeg() != null && 
+				stockLevel.getControlSeg().getTrnnam().toUpperCase().equals("UC_STOCK_LEVEL"));
 	}
 
 	@Test
