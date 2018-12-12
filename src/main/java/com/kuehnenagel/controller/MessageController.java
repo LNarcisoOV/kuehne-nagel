@@ -91,7 +91,7 @@ public class MessageController {
 		StockLevel stockLevel = new StockLevel();
 		try{
 			stockLevel = (StockLevel) UtilConverter.convertXmlStringIntoObjecto(xml);
-			jmsDispatcherInterface.publishOnSpecificQueue("kuehnenagel.queue.sample", stockLevel);
+			jmsDispatcherInterface.publishOnSpecificQueue("kuehnenagel.queue.sample.test", stockLevel);
 			stockLevel.setResponseStatusCode(HttpStatus.OK.value());
 			return stockLevel;
 		}catch(UnmarshalException h) {
