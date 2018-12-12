@@ -67,7 +67,8 @@ public class MessageControllerTest {
 
 		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 		MockHttpServletResponse response = result.getResponse();
-		assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+		assertTrue(response.getContentAsString().toUpperCase().contains("INVALID XML."));
+		assertTrue(response.getContentAsString().toUpperCase().contains("400"));
 	}
 	
 	@Test

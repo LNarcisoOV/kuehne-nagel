@@ -7,6 +7,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class StockLevel {
 
 	private ControlSeg controlSeg;
+	private Integer responseStatusCode;
+	private String responseMessage;
 
 	public ControlSeg getControlSeg() {
 		return controlSeg;
@@ -17,4 +19,19 @@ public class StockLevel {
 		this.controlSeg = controlSeg;
 	}
 
+	public Integer getResponseStatusCode() {
+		return responseStatusCode;
+	}
+
+	public void setResponseStatusCode(Integer responseStatusCode) {
+		this.responseStatusCode = responseStatusCode;
+	}
+
+	public String getResponseMessage() {
+		return responseMessage;
+	}
+
+	public void setResponseMessage(String responseMessage) {
+		this.responseMessage = responseMessage;
+	}
 }

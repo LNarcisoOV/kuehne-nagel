@@ -1,10 +1,10 @@
 package com.kuehnenagel.controller;
 
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.UnmarshalException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,32 +32,54 @@ public class MessageController {
 
 	@ResponseBody
 	@PostMapping(value="sendMessageQueue/", produces="application/xml", consumes="application/xml")
-	public StockLevel sendMessageQueue(@RequestBody StockLevel stockLevel) {
+	public StockLevel sendMessageQueue(@RequestBody String xml){
+		StockLevel stockLevel = new StockLevel();
 		try{
-			String xmlString = UtilConverter.convertObjectInXmlString(stockLevel);
-			jmsDispatcherInterface.sendMessage("kuehnenagel.queue.sample", xmlString);
+			stockLevel = (StockLevel) UtilConverter.convertXmlStringIntoObjecto(xml);
+			jmsDispatcherInterface.publishOnSpecificQueue("kuehnenagel.queue.sample", stockLevel);
+			stockLevel.setResponseStatusCode(HttpStatus.OK.value());
+			return stockLevel;
+		}catch(UnmarshalException h) {
+			h.printStackTrace();
+			stockLevel.setResponseStatusCode(HttpStatus.BAD_REQUEST.value());
+			stockLevel.setResponseMessage("INVALID XML.");
 			return stockLevel;
 		}catch(JAXBException e) {
 			e.printStackTrace();
+			stockLevel.setResponseStatusCode(HttpStatus.BAD_REQUEST.value());
+			stockLevel.setResponseMessage("INVALID XML.");
 			return stockLevel;
 		}catch(Exception ex) {
 			ex.printStackTrace();
+			stockLevel.setResponseStatusCode(HttpStatus.BAD_REQUEST.value());
+			stockLevel.setResponseMessage("AN ERROR HAPPENS.");
 			return stockLevel;
 		}
 	}
 	
 	@ResponseBody
 	@PostMapping(value="sendMessageTopic/", produces="application/xml", consumes="application/xml")
-	public StockLevel sendMessageTopic(@RequestBody StockLevel stockLevel) {
+	public StockLevel sendMessageTopic(@RequestBody String xml){
+		StockLevel stockLevel = new StockLevel();
 		try{
-			String xmlString = UtilConverter.convertObjectInXmlString(stockLevel);
-			jmsDispatcherInterface.sendMessage("kuehnenagel.topic.sample", xmlString);
+			stockLevel = (StockLevel) UtilConverter.convertXmlStringIntoObjecto(xml);
+			jmsDispatcherInterface.publishOnSpecificQueue("kuehnenagel.topic.sample", stockLevel);
+			stockLevel.setResponseStatusCode(HttpStatus.OK.value());
+			return stockLevel;
+		}catch(UnmarshalException h) {
+			h.printStackTrace();
+			stockLevel.setResponseStatusCode(HttpStatus.BAD_REQUEST.value());
+			stockLevel.setResponseMessage("INVALID XML.");
 			return stockLevel;
 		}catch(JAXBException e) {
 			e.printStackTrace();
+			stockLevel.setResponseStatusCode(HttpStatus.BAD_REQUEST.value());
+			stockLevel.setResponseMessage("INVALID XML.");
 			return stockLevel;
 		}catch(Exception ex) {
 			ex.printStackTrace();
+			stockLevel.setResponseStatusCode(HttpStatus.BAD_REQUEST.value());
+			stockLevel.setResponseMessage("AN ERROR HAPPENS.");
 			return stockLevel;
 		}
 	}
@@ -65,16 +87,27 @@ public class MessageController {
 	
 	@ResponseBody
 	@PostMapping(value="sendMessageQueueTest/", produces="application/xml", consumes="application/xml")
-	public StockLevel sendMessageQueueTest(@RequestBody StockLevel stockLevel) {
+	public StockLevel sendMessageQueueTest(@RequestBody String xml){
+		StockLevel stockLevel = new StockLevel();
 		try{
-			String xmlString = UtilConverter.convertObjectInXmlString(stockLevel);
-			jmsDispatcherInterface.sendMessage("kuehnenagel.queue.sample.test", xmlString);
+			stockLevel = (StockLevel) UtilConverter.convertXmlStringIntoObjecto(xml);
+			jmsDispatcherInterface.publishOnSpecificQueue("kuehnenagel.queue.sample", stockLevel);
+			stockLevel.setResponseStatusCode(HttpStatus.OK.value());
+			return stockLevel;
+		}catch(UnmarshalException h) {
+			h.printStackTrace();
+			stockLevel.setResponseStatusCode(HttpStatus.BAD_REQUEST.value());
+			stockLevel.setResponseMessage("INVALID XML.");
 			return stockLevel;
 		}catch(JAXBException e) {
 			e.printStackTrace();
+			stockLevel.setResponseStatusCode(HttpStatus.BAD_REQUEST.value());
+			stockLevel.setResponseMessage("INVALID XML.");
 			return stockLevel;
 		}catch(Exception ex) {
 			ex.printStackTrace();
+			stockLevel.setResponseStatusCode(HttpStatus.BAD_REQUEST.value());
+			stockLevel.setResponseMessage("AN ERROR HAPPENS.");
 			return stockLevel;
 		}
 	}
