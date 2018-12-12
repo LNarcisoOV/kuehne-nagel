@@ -32,7 +32,7 @@ public class MessageController {
 
 	@ResponseBody
 	@PostMapping(value="sendMessageQueue/", produces="application/xml", consumes="application/xml")
-	public StockLevel sendMessageQueue(@RequestBody StockLevel stockLevel) throws Exception {
+	public StockLevel sendMessageQueue(@RequestBody StockLevel stockLevel) {
 		try{
 			String xmlString = UtilConverter.convertObjectInXmlString(stockLevel);
 			jmsDispatcherInterface.sendMessage("kuehnenagel.queue.sample", xmlString);

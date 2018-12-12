@@ -19,7 +19,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 import com.kuehnenagel.Util.XmlExampleUtil;
 
@@ -28,8 +27,6 @@ import com.kuehnenagel.Util.XmlExampleUtil;
 public class MessageControllerTest {
 	
 	private MockMvc mockMvc;
-	
-    private WebApplicationContext wac;
 	
 	@Autowired
 	private MessageController messageController;
@@ -42,6 +39,11 @@ public class MessageControllerTest {
 	@Test
 	public void testTheContextOfTheApplication() throws Exception {
 		mockMvc.perform(get("/")).andExpect(status().isOk());
+	}
+	
+	@Test
+	public void testInvalidUrl() throws Exception {
+		mockMvc.perform(get("/invalidUrl/")).andExpect(status().isNotFound());
 	}
 
 	@Test
