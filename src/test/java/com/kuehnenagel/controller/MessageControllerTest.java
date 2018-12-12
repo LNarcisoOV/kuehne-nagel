@@ -5,6 +5,8 @@ import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import javax.xml.bind.JAXBException;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

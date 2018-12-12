@@ -95,17 +95,14 @@ public class MessageController {
 			stockLevel.setResponseStatusCode(HttpStatus.OK.value());
 			return stockLevel;
 		}catch(UnmarshalException h) {
-			h.printStackTrace();
 			stockLevel.setResponseStatusCode(HttpStatus.BAD_REQUEST.value());
 			stockLevel.setResponseMessage("INVALID XML.");
 			return stockLevel;
 		}catch(JAXBException e) {
-			e.printStackTrace();
 			stockLevel.setResponseStatusCode(HttpStatus.BAD_REQUEST.value());
 			stockLevel.setResponseMessage("INVALID XML.");
 			return stockLevel;
 		}catch(Exception ex) {
-			ex.printStackTrace();
 			stockLevel.setResponseStatusCode(HttpStatus.BAD_REQUEST.value());
 			stockLevel.setResponseMessage("AN ERROR HAPPENS.");
 			return stockLevel;
