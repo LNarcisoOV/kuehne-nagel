@@ -5,11 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.io.StringReader;
-
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -17,54 +13,25 @@ import org.junit.rules.ExpectedException;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.kuehnenagel.model.StockLevel;
+import com.kuehnenagel.util.UtilConverter;
 
 @SpringBootTest
 public class UtilConverterTest {
-
-	private static final String validXmlExample = "<UC_STOCK_LEVEL_IFD>\r\n" + "<CTRL_SEG>\r\n"
-			+ "<TRNNAM>UC_STOCK_LEVEL</TRNNAM>\r\n" + "<TRNVER>20180100</TRNVER>\r\n"
-			+ "<UUID>0de01919-81eb-4cc7-a51d-15f6085fc1a4</UUID>\r\n" + "<WH_ID>WHS01</WH_ID>\r\n"
-			+ "<CLIENT_ID>CLIE01</CLIENT_ID>\r\n" + "<ISO_2_CTRY_NAME>GB</ISO_2_CTRY_NAME>\r\n"
-			+ "<REQUEST_ID>bc2a55e8-5a07-4af6-85fd-8290d3ccfb51</REQUEST_ID>\r\n" + "<ROUTE_ID>186</ROUTE_ID>\r\n"
-			+ "</CTRL_SEG>\r\n" + "</UC_STOCK_LEVEL_IFD>";
-	
-	//two strings in interger fields, 'abcd' and 'efgh'
-	private static final String wrongTypesXmlExample = "<UC_STOCK_LEVEL_IFD>\r\n" + "<CTRL_SEG>\r\n"
-			+ "<TRNNAM>UC_STOCK_LEVEL</TRNNAM>\r\n" + "<TRNVER>abcd</TRNVER>\r\n"
-			+ "<UUID>0de01919-81eb-4cc7-a51d-15f6085fc1a4</UUID>\r\n" + "<WH_ID>WHS01</WH_ID>\r\n"
-			+ "<CLIENT_ID>CLIE01</CLIENT_ID>\r\n" + "<ISO_2_CTRY_NAME>GB</ISO_2_CTRY_NAME>\r\n"
-			+ "<REQUEST_ID>bc2a55e8-5a07-4af6-85fd-8290d3ccfb51</REQUEST_ID>\r\n" + "<ROUTE_ID>efgh</ROUTE_ID>\r\n"
-			+ "</CTRL_SEG>\r\n" + "</UC_STOCK_LEVEL_IFD>";
-	
-	private static final String emptyXmlExample = "<UC_STOCK_LEVEL_IFD>\r\n" + "<CTRL_SEG>\r\n"
-			+ "<TRNNAM></TRNNAM>\r\n" + "<TRNVER></TRNVER>\r\n"
-			+ "<UUID></UUID>\r\n" + "<WH_ID></WH_ID>\r\n"
-			+ "<CLIENT_ID></CLIENT_ID>\r\n" + "<ISO_2_CTRY_NAME></ISO_2_CTRY_NAME>\r\n"
-			+ "<REQUEST_ID></REQUEST_ID>\r\n" + "<ROUTE_ID></ROUTE_ID>\r\n"
-			+ "</CTRL_SEG>\r\n" + "</UC_STOCK_LEVEL_IFD>";
-
-	//Xml without first tag <UC_STOCK_LEVEL_IFD>\r\n
-	private static final String invalidXmlExample = "" + "<CTRL_SEG>\r\n"
-			+ "<TRNNAM>UC_STOCK_LEVEL</TRNNAM>\r\n" + "<TRNVER>20180100</TRNVER>\r\n"
-			+ "<UUID>0de01919-81eb-4cc7-a51d-15f6085fc1a4</UUID>\r\n" + "<WH_ID>WHS01</WH_ID>\r\n"
-			+ "<CLIENT_ID>CLIE01</CLIENT_ID>\r\n" + "<ISO_2_CTRY_NAME>GB</ISO_2_CTRY_NAME>\r\n"
-			+ "<REQUEST_ID>bc2a55e8-5a07-4af6-85fd-8290d3ccfb51</REQUEST_ID>\r\n" + "<ROUTE_ID>186</ROUTE_ID>\r\n"
-			+ "</CTRL_SEG>\r\n" + "</UC_STOCK_LEVEL_IFD>";
 
 	@Rule
     public ExpectedException thrown = ExpectedException.none();
 	
 	@Test
-	public void verifyConversionOfXmlIntoObjectIsNotNull() {
-		StockLevel stockLevel = convertXmlIntoStockLevel(validXmlExample);
+	public void verifyConversionOfXmlIntoObjectIsNotNull() throws JAXBException {
+		StockLevel stockLevel = (StockLevel) UtilConverter.convertXmlStringIntoObjecto(XmlExampleUtil.validXmlExample);
 		assertNotNull(stockLevel);
 		assertNotNull(stockLevel.getControlSeg()); 
 		assertTrue("UC_STOCK_LEVEL".equals(stockLevel.getControlSeg().getTrnnam().toUpperCase()));
 	}
 
 	@Test
-	public void verifyValuesOfConversionOfXmlIntoObject() {
-		StockLevel stockLevel = convertXmlIntoStockLevel(validXmlExample);
+	public void verifyValuesOfConversionOfXmlIntoObject() throws JAXBException {
+		StockLevel stockLevel = (StockLevel) UtilConverter.convertXmlStringIntoObjecto(XmlExampleUtil.validXmlExample);
 		assertEquals(stockLevel.getControlSeg().getTrnver(), new Integer(20180100));
 		assertEquals(stockLevel.getControlSeg().getUuid(), "0de01919-81eb-4cc7-a51d-15f6085fc1a4");
 		assertEquals(stockLevel.getControlSeg().getWhId(), "WHS01");
@@ -75,8 +42,8 @@ public class UtilConverterTest {
 	}
 	
 	@Test
-	public void verifyValuesOfConversionOfAnEmptyXmlIntoObject() {
-		StockLevel stockLevel = convertXmlIntoStockLevel(emptyXmlExample);
+	public void verifyValuesOfConversionOfAnEmptyXmlIntoObject() throws JAXBException {
+		StockLevel stockLevel = (StockLevel) UtilConverter.convertXmlStringIntoObjecto(XmlExampleUtil.emptyXmlExample);
 		assertEquals(stockLevel.getControlSeg().getTrnver(), new Integer(0));
 		assertEquals(stockLevel.getControlSeg().getUuid(), "");
 		assertEquals(stockLevel.getControlSeg().getWhId(), "");
@@ -87,27 +54,14 @@ public class UtilConverterTest {
 	}
 	
 	@Test
-	public void verifyValuesOfConversionOfAWrongXmlIntoObject() {
-		StockLevel stockLevel = convertXmlIntoStockLevel(wrongTypesXmlExample);
+	public void verifyValuesOfConversionOfAWrongXmlIntoObject() throws JAXBException {
+		StockLevel stockLevel = (StockLevel) UtilConverter.convertXmlStringIntoObjecto(XmlExampleUtil.wrongTypesXmlExample);
 		assertNull(stockLevel.getControlSeg().getTrnver());
 		assertNull(stockLevel.getControlSeg().getRouteId());
 	}
 	
-	@Test(expected = Exception.class)
-	public void shallThrowsExceptionAfterSendAnInvalidXml() {
-		convertXmlIntoStockLevel(invalidXmlExample);
+	@Test(expected = JAXBException.class)
+	public void shallThrowsExceptionAfterSendAnInvalidXml() throws JAXBException {
+		UtilConverter.convertXmlStringIntoObjecto(XmlExampleUtil.invalidXmlExample);
 	}
-	
-	private StockLevel convertXmlIntoStockLevel(String xml) {
-		JAXBContext jaxbContext;
-		try {
-			jaxbContext = JAXBContext.newInstance(StockLevel.class);
-			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-			return (StockLevel) jaxbUnmarshaller.unmarshal(new StringReader(xml));
-		} catch (JAXBException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
 }
