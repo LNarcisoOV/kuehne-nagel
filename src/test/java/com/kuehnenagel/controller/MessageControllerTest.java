@@ -48,7 +48,7 @@ public class MessageControllerTest {
 
 	@Test
 	public void testSendMessageQueue() throws Exception {
-		RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/sendMessageQueue/")
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/sendMessageQueueTest/")
 										.accept(MediaType.APPLICATION_XML)
 										.contentType(MediaType.APPLICATION_XML)
 										.content(XmlExampleUtil.validXmlExample);
@@ -60,7 +60,7 @@ public class MessageControllerTest {
 	
 	@Test
 	public void testSendMessageQueueWithInvalidXml() throws Exception {
-		RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/sendMessageQueue/")
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/sendMessageQueueTest/")
 										.accept(MediaType.APPLICATION_XML)
 										.contentType(MediaType.APPLICATION_XML)
 										.content(XmlExampleUtil.invalidXmlExample);
@@ -72,7 +72,7 @@ public class MessageControllerTest {
 	
 	@Test
 	public void testSendMessageQueueWithEmptyXml() throws Exception {
-		RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/sendMessageQueue/")
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/sendMessageQueueTest/")
 										.accept(MediaType.APPLICATION_XML)
 										.contentType(MediaType.APPLICATION_XML)
 										.content(XmlExampleUtil.emptyXmlExample);

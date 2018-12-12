@@ -61,4 +61,21 @@ public class MessageController {
 			return stockLevel;
 		}
 	}
+	
+	
+	@ResponseBody
+	@PostMapping(value="sendMessageQueueTest/", produces="application/xml", consumes="application/xml")
+	public StockLevel sendMessageQueueTest(@RequestBody StockLevel stockLevel) {
+		try{
+			String xmlString = UtilConverter.convertObjectInXmlString(stockLevel);
+			jmsDispatcherInterface.sendMessage("kuehnenagel.queue.sample.test", xmlString);
+			return stockLevel;
+		}catch(JAXBException e) {
+			e.printStackTrace();
+			return stockLevel;
+		}catch(Exception ex) {
+			ex.printStackTrace();
+			return stockLevel;
+		}
+	}
 }
