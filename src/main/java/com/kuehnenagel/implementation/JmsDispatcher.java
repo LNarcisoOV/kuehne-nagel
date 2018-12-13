@@ -11,7 +11,7 @@ import com.kuehnenagel.model.StockLevel;
 import com.kuehnenagel.util.UtilConverter;
 
 @Service
-public class JmsDispatcher implements ApplicationRunner, JmsDispatcherInterface{
+public class JmsDispatcher implements JmsDispatcherInterface{
 
 	@Autowired 
  	private JmsTemplate jmsTemplate;
@@ -29,14 +29,4 @@ public class JmsDispatcher implements ApplicationRunner, JmsDispatcherInterface{
 		String xml = UtilConverter.convertObjectInXmlString(stockLevel);
 		sendMessage(endPoint, xml);
     }
-	
-	public void publishXMLOnSpecificQueue(String endPoint, String xml) throws Exception {
-		sendMessage(endPoint, xml);
-    }
-
-	@Override
-	public void run(ApplicationArguments args) throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
 }

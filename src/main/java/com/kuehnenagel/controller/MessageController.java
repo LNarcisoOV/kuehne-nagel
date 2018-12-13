@@ -58,40 +58,12 @@ public class MessageController {
 	}
 	
 	@ResponseBody
-	@PostMapping(value="sendMessageTopic/", produces="application/xml", consumes="application/xml")
-	public StockLevel sendMessageTopic(@RequestBody String xml){
-		StockLevel stockLevel = new StockLevel();
-		try{
-			stockLevel = (StockLevel) UtilConverter.convertXmlStringIntoObjecto(xml);
-			jmsDispatcherInterface.publishOnSpecificQueue("kuehnenagel.topic.sample", stockLevel);
-			stockLevel.setResponseStatusCode(HttpStatus.OK.value());
-			return stockLevel;
-		}catch(UnmarshalException h) {
-			h.printStackTrace();
-			stockLevel.setResponseStatusCode(HttpStatus.BAD_REQUEST.value());
-			stockLevel.setResponseMessage("INVALID XML.");
-			return stockLevel;
-		}catch(JAXBException e) {
-			e.printStackTrace();
-			stockLevel.setResponseStatusCode(HttpStatus.BAD_REQUEST.value());
-			stockLevel.setResponseMessage("INVALID XML.");
-			return stockLevel;
-		}catch(Exception ex) {
-			ex.printStackTrace();
-			stockLevel.setResponseStatusCode(HttpStatus.BAD_REQUEST.value());
-			stockLevel.setResponseMessage("AN ERROR HAPPENS.");
-			return stockLevel;
-		}
-	}
-	
-	
-	@ResponseBody
 	@PostMapping(value="sendMessageQueueTest/", produces="application/xml", consumes="application/xml")
 	public StockLevel sendMessageQueueTest(@RequestBody String xml){
 		StockLevel stockLevel = new StockLevel();
 		try{
 			stockLevel = (StockLevel) UtilConverter.convertXmlStringIntoObjecto(xml);
-			jmsDispatcherInterface.publishOnSpecificQueue("kuehnenagel.queue.sample.test", stockLevel);
+			jmsDispatcherInterface.publishOnSpecificQueue("kuehnenagel.queue.sample.testController", stockLevel);
 			stockLevel.setResponseStatusCode(HttpStatus.OK.value());
 			return stockLevel;
 		}catch(UnmarshalException h) {
