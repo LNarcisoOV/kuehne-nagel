@@ -1,4 +1,4 @@
-package com.kuehnenagel.Util;
+package com.kuehnenagel.util;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

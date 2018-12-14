@@ -18,7 +18,7 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.kuehnenagel.Util.XmlExampleUtil;
+import com.kuehnenagel.util.XmlExampleUtil;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)

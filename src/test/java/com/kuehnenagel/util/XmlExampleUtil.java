@@ -1,4 +1,4 @@
-package com.kuehnenagel.Util;
+package com.kuehnenagel.util;
 
 public class XmlExampleUtil {
 	
